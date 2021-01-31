@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BUILDX_VER='v0.5.1'
+BUILDX_VER='v0.3.1'
 latest_ubuntu='20'
 latest_alpine='20'
 
