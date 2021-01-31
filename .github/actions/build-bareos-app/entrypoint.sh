@@ -35,7 +35,7 @@ while read app version arch app_path ; do
     "${app_path}"
 
   if [[ $? -ne 0 ]] ; then
-    echo "::warning ERROR: build failed ${GITHUB_REPOSITORY}-${app}:${tag} in ${app_path}"
+    echo "::warning:: ERROR: build failed ${GITHUB_REPOSITORY}-${app}:${tag} in ${app_path}"
     #exit 1
   fi
 
