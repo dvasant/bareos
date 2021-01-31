@@ -34,6 +34,11 @@ while read app version arch app_path ; do
     --tag "${GITHUB_REPOSITORY}-${app}:${tag}" \
     "${app_path}"
 
+  if [[ $? -ne 0 ]] ; then
+    echo "ERROR: build failed ${app}:${tag} / ${app_path}"
+    exit 1
+  fi
+
   # Save image to tar file
   docker save \
     --output "${workdir}/bareos-${app}-${tag}.tar" \
