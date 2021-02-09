@@ -7,6 +7,10 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
 
   # Force client/file daemon password
   sed -i 's#Password = .*#Password = '\""${BAREOS_FD_PASSWORD}"\"'#' $bareos_fd_config
+  sed -i 's#\# Plugin Directory #Plugin Directory #' \
+    /etc/bareos/bareos-fd.d/client/myself.conf
+  sed -i 's#\# Plugin Names = .*#Plugin Names = "python3" #' \
+    /etc/bareos/bareos-fd.d/client/myself.conf
 
   # Control file
   touch /etc/bareos/bareos-config.control

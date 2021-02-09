@@ -30,9 +30,16 @@ RUN apt-get update -qq \
  && echo "deb $BAREOS_REPO /" > /etc/apt/sources.list.d/bareos.list \
  && apt-get update -qq \
  && apt-get install -qq -y --no-install-recommends \
-    bareos-client mysql-client postgresql-client bareos-tools \
+    bareos-client mysql-client postgresql-client bareos-tools wget gnupg vim\
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
+
+RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-focal main" | tee /etc/apt/sources.list.d/gcsfuse.list
+RUN wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg --no-check-certificate | apt-key add -
+
+RUN apt-get update -y
+RUN apt-get install -y gcsfuse install bareos-vmware-plugin vim python3 python3-pip libssl-dev gcc build-essential
+RUN pip3 install --upgrade google-cloud-pubsub python-bareos sslpsk
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod u+x /docker-entrypoint.sh
