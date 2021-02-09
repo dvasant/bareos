@@ -42,12 +42,14 @@ RUN apt-get update -qq \
  && apt-get install -qq -y --no-install-recommends \
     bareos postgresql-client bareos-tools \
  && apt-get clean \
- && rm -rf /var/lib/apt/lists/* \
- && lsb_release -c -s > /tmp/lsb_release \
- && GCSFUSE_REPO=$(cat /tmp/lsb_release); echo "deb http://packages.cloud.google.com/apt gcsfuse-$GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list \
- && wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
- && apt-get update \
- && apt-get install -y gcsfuse
+ && rm -rf /var/lib/apt/lists/*
+
+RUN lsb_release -c -s > /tmp/lsb_release
+RUN GCSFUSE_REPO=$(cat /tmp/lsb_release); echo "deb http://packages.cloud.google.com/apt gcsfuse-$GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list
+RUN wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+RUN apt-get update
+RUN apt-get install -y gcsfuse
 
 RUN tar czf /bareos-dir.tgz /etc/bareos
 
