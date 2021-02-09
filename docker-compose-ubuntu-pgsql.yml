@@ -2,7 +2,7 @@
 version: '3'
 services:
   bareos-dir:
-    image: dvasanth0510/bareos-director:latest
+    image: dvasanth0510/bareos-dir:latest
     volumes:
       - /data/bareos/config/director:/etc/bareos
       - /data/bareos/data/director:/var/lib/bareos # required for MyCatalog backup
