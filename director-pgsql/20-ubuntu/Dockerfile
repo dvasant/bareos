@@ -40,7 +40,7 @@ RUN apt-get update -qq \
     | debconf-set-selections \
  && apt-get update -qq \
  && apt-get install -qq -y --no-install-recommends \
-    bareos postgresql-client bareos-tools wget\
+    bareos postgresql-client bareos-tools wget gnupg vim\
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
