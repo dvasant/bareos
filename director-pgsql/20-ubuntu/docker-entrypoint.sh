@@ -45,6 +45,11 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
     sed -i "s#/usr/bin/bsmtp -h.*#/usr/local/bin/webhook-notify %t %e %c %l %n\"#" \
       /etc/bareos/bareos-dir.d/messages/Standard.conf
   fi
+  # director daemon
+  sed -i 's#Password = .*#Password = '\""${BAREOS_DIRECTOR_PASSWORD}"\"'#' \
+    /etc/bareos/bareos-dir.d/director/bareos-dir.conf
+  sed -i 's#Password = .*#Password = '\""${BAREOS_DIRECTOR_PASSWORD}"\"'#' \
+    /etc/bareos/bconsole.conf
 
   # storage daemon
   sed -i 's#Address = .*#Address = '\""${BAREOS_SD_HOST}"\"'#' \

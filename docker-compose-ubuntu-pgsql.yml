@@ -12,6 +12,7 @@ services:
       - DB_NAME=bareos
       - DB_USER=root
       - DB_PASSWORD=ThisIsMySecretDBp4ssw0rd
+      - BAREOS_DIRECTOR_PASSWORD=ThisIsMySecretDIRp4ssw0rd
       - BAREOS_SD_HOST=bareos-sd
       - BAREOS_SD_PASSWORD=ThisIsMySecretSDp4ssw0rd
       - BAREOS_FD_HOST=bareos-fd
@@ -19,7 +20,7 @@ services:
       - BAREOS_WEBUI_PASSWORD=ThisIsMySecretUIp4ssw0rd
       - SMTP_HOST=smtpd
       #- SENDER_MAIL=your-sender@mail.address #optional
-      - ADMIN_MAIL=your@mail.address # Change me!
+      - ADMIN_MAIL=dvasanth@appranix.com # Change me!
       # Optional you can gets backup notification via Slack or Telegram
       - WEBHOOK_NOTIFICATION=false # true or false if set to true email notification gets disabled
       - WEBHOOK_TYPE=slack # choose slack or telegram
@@ -45,6 +46,7 @@ services:
       - /data/bareos/data/director:/var/lib/bareos-director # required for MyCatalog backup
     environment:
       - BAREOS_FD_PASSWORD=ThisIsMySecretFDp4ssw0rd
+      - BAREOS_DIRECTOR_PASSWORD=ThisIsMySecretDIRp4ssw0rd
       - FORCE_ROOT=false
 
   bareos-webui:
@@ -58,7 +60,7 @@ services:
       - /data/bareos/config/webui:/etc/bareos-webui
 
   bareos-db:
-    image: postgres:9.3
+    image: postgres:9.6
     volumes:
       - /data/pgsql/data:/var/lib/postgresql/data
     environment:
