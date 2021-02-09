@@ -47,7 +47,7 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
   fi
 
   # director daemon
-  if [[ -z "${BAREOS_DIRECTOR_PASSWORD}" ]]; then
+  if [[ ! -z "${BAREOS_DIRECTOR_PASSWORD}" ]]; then
   sed -i 's#Password = .*#Password = '\""${BAREOS_DIRECTOR_PASSWORD}"\"'#' \
     /etc/bareos/bareos-dir.d/director/bareos-dir.conf
   sed -i 's#Password = .*#Password = '\""${BAREOS_DIRECTOR_PASSWORD}"\"'#' \
