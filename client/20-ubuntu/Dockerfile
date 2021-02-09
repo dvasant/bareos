@@ -38,7 +38,7 @@ RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-focal main" | tee /et
 RUN wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg --no-check-certificate | apt-key add -
 
 RUN apt-get update -y
-RUN apt-get install -y gcsfuse install bareos-vmware-plugin vim python3 python3-pip libssl-dev gcc build-essential
+RUN apt-get install -y gcsfuse bareos-vmware-plugin vim python3 python3-pip libssl-dev gcc build-essential
 RUN pip3 install --upgrade google-cloud-pubsub python-bareos sslpsk
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
