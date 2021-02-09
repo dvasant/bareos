@@ -45,7 +45,7 @@ RUN apt-get update -qq \
  && rm -rf /var/lib/apt/lists/*
 
 RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-focal main" | tee /etc/apt/sources.list.d/gcsfuse.list
-RUN wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg --no-check-certificate | apt-key add -
 
 RUN apt-get update -y
 RUN apt-get install -y gcsfuse
