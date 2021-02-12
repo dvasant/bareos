@@ -19,32 +19,39 @@ ENV BAREOS_DAEMON_USER bareos
 ENV DEBIAN_FRONTEND noninteractive
 ENV BAREOS_KEY http://download.bareos.org/bareos/release/20/xUbuntu_20.04/Release.key
 ENV BAREOS_REPO http://download.bareos.org/bareos/release/20/xUbuntu_20.04/
+ENV TZ UTC
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update -qq \
- && apt-get -qq -y install --no-install-recommends curl tzdata gnupg \
- && curl -Ls $BAREOS_KEY -o /tmp/bareos.key \
- && apt-key --keyring /etc/apt/trusted.gpg.d/breos-keyring.gpg \
-    add /tmp/bareos.key \
- && echo "deb $BAREOS_REPO /" > /etc/apt/sources.list.d/bareos.list \
- && apt-get update -qq \
- && apt-get install -qq -y --no-install-recommends \
-    bareos-client mysql-client postgresql-client bareos-tools wget gnupg vim\
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+   && apt-get -qq -y install --no-install-recommends curl tzdata gnupg wget ca-certificates python3-dev python3-pip \
+   && curl -Ls $BAREOS_KEY -o /tmp/bareos.key \
+   && apt-key --keyring /etc/apt/trusted.gpg.d/breos-keyring.gpg \
+   add /tmp/bareos.key \
+   && echo "deb $BAREOS_REPO /" > /etc/apt/sources.list.d/bareos.list \
+   && apt-get update -qq \
+   && apt-get install -qq -y --no-install-recommends \
+   bareos-client mysql-client postgresql-client bareos-tools bareos-vadp-dumper bareos-vmware-vix-disklib \
+   bareos-vmware-plugin libssl-dev gcc build-essential \
+   && apt-get clean \
+   && rm -rf /var/lib/apt/lists/*
 
-RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-focal main" | tee /etc/apt/sources.list.d/gcsfuse.list
-RUN wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg --no-check-certificate | apt-key add -
+RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-jessie main" | tee /etc/apt/sources.list.d/gcsfuse.list; \
+   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+   apt-get update ; apt-get install -y apt-utils kmod && apt-get install -y gcsfuse && apt-get clean \
+   && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update -y
-RUN apt-get install -y gcsfuse bareos-vmware-plugin vim python3 python3-pip libssl-dev gcc build-essential
 RUN pip3 install --upgrade google-cloud-pubsub python-bareos sslpsk
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod u+x /docker-entrypoint.sh
 
 RUN tar czf /bareos-fd.tgz /etc/bareos/bareos-fd.d
+
+RUN pip3 install pyvmomi
+RUN mkdir -p /etc/bareos/bareos-fd.d/cbt_tool && \
+   wget https://raw.githubusercontent.com/bareos/bareos/master/core/src/vmware/vmware_cbt_tool/vmware_cbt_tool.py -P /etc/bareos/bareos-fd.d/cbt_tool && \
+   chmod +x /etc/bareos/bareos-fd.d/cbt_tool/vmware_cbt_tool.py
 
 EXPOSE 9102
 

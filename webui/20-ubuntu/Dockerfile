@@ -18,6 +18,7 @@ LABEL org.label-schema.schema-version="1.0" \
 ENV BAREOS_KEY http://download.bareos.org/bareos/release/20/xUbuntu_20.04/Release.key
 ENV BAREOS_REPO http://download.bareos.org/bareos/release/20/xUbuntu_20.04/
 ENV DEBIAN_FRONTEND noninteractive
+ENV TZ UTC
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
