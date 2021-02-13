@@ -45,13 +45,10 @@ RUN apt-get update -qq \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-jessie main" | tee /etc/apt/sources.list.d/gcsfuse.list; \
-   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
-   apt-get update ; apt-get install -y apt-utils kmod && apt-get install -y gcsfuse && apt-get clean \
-   && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update -y
-RUN apt-get install -y gcsfuse
+# RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-jessie main" | tee /etc/apt/sources.list.d/gcsfuse.list; \
+#    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
+#    && apt-get update ; apt-get install -y apt-utils kmod && apt-get install -y gcsfuse && apt-get clean \
+#    && rm -rf /var/lib/apt/lists/*
 
 RUN tar czf /bareos-dir.tgz /etc/bareos
 

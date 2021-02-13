@@ -2,7 +2,7 @@
 
 bareos_fd_config="/etc/bareos/bareos-fd.d/director/bareos-dir.conf"
 
-if [ ! -f /etc/bareos/bareos-config.control ]; then
+if [ ! -f /etc/bareos/bareos-fd-config.control ]; then
   tar xzf /bareos-fd.tgz --backup=simple --suffix=.before-control
 
   # Force client/file daemon password
@@ -13,7 +13,7 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
     /etc/bareos/bareos-fd.d/client/myself.conf
 
   # Control file
-  touch /etc/bareos/bareos-config.control
+  touch /etc/bareos/bareos-fd-config.control
 fi
 
 # Fix permissions

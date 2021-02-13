@@ -2,14 +2,14 @@
 
 bareos_sd_config="/etc/bareos/bareos-sd.d/director/bareos-dir.conf"
 mount_command="${GCSFUSE_BUCKET} /var/lib/bareos/storage gcsfuse rw,nonempty,_netdev,allow_other,uid=101,gid=101"
-if [ ! -f /etc/bareos/bareos-config.control ]; then
+if [ ! -f /etc/bareos/bareos-sd-config.control ]; then
   tar xfz /bareos-sd.tgz --backup=simple --suffix=.before-control
 
   # Update bareos-storage configs
   sed -i 's#Password = .*#Password = '\""${BAREOS_SD_PASSWORD}"\"'#' $bareos_sd_config
 
   # Control file
-  touch /etc/bareos/bareos-config.control
+  touch /etc/bareos/bareos-sd-config.control
 fi
 
 if [[ ! -z "${GCSFUSE_BUCKET}" ]]; then
