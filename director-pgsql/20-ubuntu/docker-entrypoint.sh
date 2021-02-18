@@ -21,7 +21,7 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
 
   # Update bareos-director configs
   # Director / mycatalog & mail report
-  sed -i 's#dbpassword = ""#dbpassword = '\"${DB_PASSWORD}\"'#' \
+  sed -i 's/dbpassword = ""/dbpassword = '\"${DB_PASSWORD}\"'/' \
     /etc/bareos/bareos-dir.d/catalog/MyCatalog.conf
   sed -i 's#dbname = "bareos"#dbname = '\"${DB_NAME}\"'\n  dbaddress = '\"${DB_HOST}\"'\n  dbport = '\"${DB_PORT}\"'#' \
     /etc/bareos/bareos-dir.d/catalog/MyCatalog.conf
@@ -48,28 +48,28 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
 
   # director daemon
   if [[ ! -z "${BAREOS_DIRECTOR_PASSWORD}" ]]; then
-  sed -i 's#Password = .*#Password = '\""${BAREOS_DIRECTOR_PASSWORD}"\"'#' \
+  sed -i 's/Password = .*/Password = '\""${BAREOS_DIRECTOR_PASSWORD}"\"'/' \
     /etc/bareos/bareos-dir.d/director/bareos-dir.conf
-  sed -i 's#Password = .*#Password = '\""${BAREOS_DIRECTOR_PASSWORD}"\"'#' \
+  sed -i 's/Password = .*/Password = '\""${BAREOS_DIRECTOR_PASSWORD}"\"'/' \
     /etc/bareos/bconsole.conf
   fi
 
   # storage daemon
-  sed -i 's#Address = .*#Address = '\""${BAREOS_SD_HOST}"\"'#' \
+  [ -n "${BAREOS_SD_HOST}" ] && sed -i 's#Address = .*#Address = '\""${BAREOS_SD_HOST}"\"'#' \
     /etc/bareos/bareos-dir.d/storage/File.conf
-  sed -i 's#Password = .*#Password = '\""${BAREOS_SD_PASSWORD}"\"'#' \
+  [ -n "${BAREOS_SD_PASSWORD}" ] && sed -i 's/Password = .*/Password = '\""${BAREOS_SD_PASSWORD}"\"'/' \
     /etc/bareos/bareos-dir.d/storage/File.conf
   sed -i 's#}#  Maximum Concurrent Jobs = 20 \n}#' /etc/bareos/bareos-dir.d/storage/File.conf
 
   # client/file daemon
-  sed -i 's#Address = .*#Address = '\""${BAREOS_FD_HOST}"\"'#' \
+  [ -n "${BAREOS_FD_HOST}" ] && sed -i 's#Address = .*#Address = '\""${BAREOS_FD_HOST}"\"'#' \
     /etc/bareos/bareos-dir.d/client/bareos-fd.conf
-  sed -i 's#Password = .*#Password = '\""${BAREOS_FD_PASSWORD}"\"'#' \
+  [ -n "${BAREOS_FD_PASSWORD}" ] && sed -i 's/Password = .*/Password = '\""${BAREOS_FD_PASSWORD}"\"'/' \
     /etc/bareos/bareos-dir.d/client/bareos-fd.conf
   sed -i 's#\}#  Maximum Concurrent Jobs = 20 \n}#' /etc/bareos/bareos-dir.d/client/bareos-fd.conf
 
   # webUI
-  sed -i 's#Password = .*#Password = '\""${BAREOS_WEBUI_PASSWORD}"\"'#' \
+  sed -i 's/Password = .*/Password = '\""${BAREOS_WEBUI_PASSWORD}"\"'/' \
     /etc/bareos/bareos-dir.d/console/admin.conf
   sed -i "s#}#  TlsEnable = false\n}#" \
     /etc/bareos/bareos-dir.d/console/admin.conf
