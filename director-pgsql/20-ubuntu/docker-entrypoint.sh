@@ -9,7 +9,7 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
 
   # Download default admin profile config
   if [ ! -f /etc/bareos/bareos-dir.d/profile/webui-admin.conf ]; then
-    cp /webui_admin.conf /etc/bareos/bareos-dir.d/profile/webui-admin.conf
+    cp /webui-admin.conf /etc/bareos/bareos-dir.d/profile/webui-admin.conf
     # curl --silent --insecure "https://${github_bareos}/${webui_admin_conf}" \
       # --output /etc/bareos/bareos-dir.d/profile/webui-admin.conf
   fi
