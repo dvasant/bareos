@@ -81,6 +81,9 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
   # MyCatalog Backup
   sed -i "s#/var/lib/bareos/bareos.sql#/var/lib/bareos-director/bareos.sql#" \
     /etc/bareos/bareos-dir.d/fileset/Catalog.conf
+  
+  # Default config file
+  cp /default.conf /etc/bareos/bareos-dir.d/job/default.conf
 
   # Control file
   touch /etc/bareos/bareos-config.control

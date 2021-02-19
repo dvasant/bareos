@@ -55,7 +55,7 @@ RUN tar czf /bareos-dir.tgz /etc/bareos
 COPY webhook-notify /usr/local/bin/webhook-notify
 COPY admin.conf.example /admin.conf
 COPY webui-admin.conf.example /webui-admin.conf
-COPY default.conf.example /default.conf.example
+COPY default.conf.example /default.conf
 RUN chmod u+x /usr/local/bin/webhook-notify
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
