@@ -22,7 +22,7 @@ if [ ! -f /etc/bareos/bareos-fd-config.control ]; then
   touch /etc/bareos/bareos-fd-config.control
 fi
 
-mkdir -p /etc/bareos/python_scripts/
+mkdir -p /etc/bareos/python-scripts/
 cp /ax_bareos_cli.py /etc/bareos/python_scripts/ax_bareos_cli.py
 chmod +x /etc/bareos/python_scripts/ax_bareos_cli.py
 
