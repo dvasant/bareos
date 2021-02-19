@@ -15,6 +15,9 @@ if [ ! -f /etc/bareos/bareos-fd-config.control ]; then
   sed -i 's#Name = .*#Name = '${HOSTNAME}'#' \
     /etc/bareos/bareos-fd.d/client/myself.conf
 
+  sed -i 's#Maximum Concurrent Jobs =.*#Maximum Concurrent Jobs = 10000#' \
+    /etc/bareos/bareos-fd.d/client/myself.conf
+
   # Control file
   touch /etc/bareos/bareos-fd-config.control
 fi
