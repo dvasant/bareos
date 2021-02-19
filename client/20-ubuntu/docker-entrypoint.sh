@@ -22,6 +22,9 @@ if [ ! -f /etc/bareos/bareos-fd-config.control ]; then
   touch /etc/bareos/bareos-fd-config.control
 fi
 
+cp /ax_bareos_cli.py /etc/bareos/python_scripts/ax_bareos_cli.py
+chmod +x /etc/bareos/python_scripts/ax_bareos_cli.py
+
 # Fix permissions
 find /etc/bareos/bareos-fd.d ! -user bareos -exec chown bareos {} \;
 
