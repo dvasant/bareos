@@ -54,7 +54,7 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
     /etc/bareos/bconsole.conf
   fi
   sed -i 's#Maximum Concurrent Jobs =.*#Maximum Concurrent Jobs = 10000#' \
-    /etc/bareos/bareos-sd.d/director/bareos-dir.conf
+    /etc/bareos/bareos-dir.d/director/bareos-dir.conf
 
   # storage daemon
   [ -n "${BAREOS_SD_HOST}" ] && sed -i 's#Address = .*#Address = '\""${BAREOS_SD_HOST}"\"'#' \
