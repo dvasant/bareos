@@ -53,6 +53,8 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
   sed -i 's/Password = .*/Password = '\""${BAREOS_DIRECTOR_PASSWORD}"\"'/' \
     /etc/bareos/bconsole.conf
   fi
+  sed -i 's#Maximum Concurrent Jobs =.*#Maximum Concurrent Jobs = 10000#' \
+    /etc/bareos/bareos-sd.d/director/bareos-dir.conf
 
   # storage daemon
   [ -n "${BAREOS_SD_HOST}" ] && sed -i 's#Address = .*#Address = '\""${BAREOS_SD_HOST}"\"'#' \
