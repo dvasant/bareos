@@ -58,7 +58,7 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
   sed -i 's#Maximum Concurrent Jobs =.*#Maximum Concurrent Jobs = 1000#' \
     /etc/bareos/bareos-dir.d/director/bareos-dir.conf
 
-  sed -i 's/#Heartbeat Interval = .*/Heartbeat Interval = 180/' \
+  sed -i 's/#Heartbeat Interval = .*/Heartbeat Interval = 60/' \
     /etc/bareos/bareos-dir.d/director/bareos-dir.conf
 
   # storage daemon
@@ -66,14 +66,14 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
     /etc/bareos/bareos-dir.d/storage/File.conf
   sed -i 's#Password = .*#Password = '\""${BAREOS_SD_PASSWORD}"\"'#' \
     /etc/bareos/bareos-dir.d/storage/File.conf
-  sed -i 's#}#  Maximum Concurrent Jobs = 20 \n}#' /etc/bareos/bareos-dir.d/storage/File.conf
+  sed -i 's#}#  Maximum Concurrent Jobs = 30 \n}#' /etc/bareos/bareos-dir.d/storage/File.conf
 
   # client/file daemon
   sed -i 's#Address = .*#Address = '\""${BAREOS_FD_HOST}"\"'#' \
     /etc/bareos/bareos-dir.d/client/bareos-fd.conf
   sed -i 's#Password = .*#Password = '\""${BAREOS_FD_PASSWORD}"\"'#' \
     /etc/bareos/bareos-dir.d/client/bareos-fd.conf
-  sed -i 's#\}#  Maximum Concurrent Jobs = 20 \n}#' /etc/bareos/bareos-dir.d/client/bareos-fd.conf
+  sed -i 's#\}#  Maximum Concurrent Jobs = 30 \n}#' /etc/bareos/bareos-dir.d/client/bareos-fd.conf
 
   # webUI
   sed -i 's#Password = .*#Password = '\""${BAREOS_WEBUI_PASSWORD}"\"'#' \
