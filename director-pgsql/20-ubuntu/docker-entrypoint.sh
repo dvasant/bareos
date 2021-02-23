@@ -58,7 +58,7 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
   sed -i 's#Maximum Concurrent Jobs =.*#Maximum Concurrent Jobs = 1000#' \
     /etc/bareos/bareos-dir.d/director/bareos-dir.conf
 
-  sed -i 's/#Heartbeat Interval = .*/Heartbeat Interval = 1 min/' \
+  sed -i 's/#Heartbeat Interval = .*/Heartbeat Interval = 180/' \
     /etc/bareos/bareos-dir.d/director/bareos-dir.conf
 
   # storage daemon
