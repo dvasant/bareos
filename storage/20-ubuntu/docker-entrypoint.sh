@@ -8,7 +8,7 @@ if [ ! -f /etc/bareos/bareos-sd-config.control ]; then
   # Update bareos-storage configs
   sed -i 's#Password = .*#Password = '\""${BAREOS_SD_PASSWORD}"\"'#' $bareos_sd_config
 
-  sed -i 's#Maximum Concurrent Jobs =.*#Maximum Concurrent Jobs = 30\n Heartbeat Interval = 60#' \
+  sed -i 's#Maximum Concurrent Jobs =.*#Maximum Concurrent Jobs = 30\n  Heartbeat Interval = 60#' \
     /etc/bareos/bareos-sd.d/storage/bareos-sd.conf
 
   # Control file

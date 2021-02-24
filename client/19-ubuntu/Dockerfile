@@ -23,14 +23,15 @@ ENV BAREOS_REPO http://download.bareos.org/bareos/release/19.2/xUbuntu_18.04/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update -qq \
- && apt-get -qq -y install --no-install-recommends curl tzdata gnupg \
+ && apt-get -qq -y install --no-install-recommends curl tzdata gnupg wget ca-certificates python3-dev python3-pip\
  && curl -Ls $BAREOS_KEY -o /tmp/bareos.key \
  && apt-key --keyring /etc/apt/trusted.gpg.d/breos-keyring.gpg \
     add /tmp/bareos.key \
  && echo "deb $BAREOS_REPO /" > /etc/apt/sources.list.d/bareos.list \
  && apt-get update -qq \
  && apt-get install -qq -y --no-install-recommends \
-    bareos-client mysql-client postgresql-client bareos-tools \
+   bareos-client mysql-client postgresql-client bareos-tools bareos-vadp-dumper bareos-vmware-vix-disklib \
+   bareos-vmware-plugin libssl-dev gcc build-essential \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
@@ -38,6 +39,11 @@ COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod u+x /docker-entrypoint.sh
 
 RUN tar czf /bareos-fd.tgz /etc/bareos/bareos-fd.d
+
+# RUN pip3 install pyvmomi
+RUN mkdir -p /etc/bareos/bareos-fd.d/cbt_tool && \
+   wget https://raw.githubusercontent.com/bareos/bareos/master/core/src/vmware/vmware_cbt_tool/vmware_cbt_tool.py -P /etc/bareos/bareos-fd.d/cbt_tool && \
+   chmod +x /etc/bareos/bareos-fd.d/cbt_tool/vmware_cbt_tool.py
 
 EXPOSE 9102
 
