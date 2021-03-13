@@ -18,16 +18,19 @@ fi
 if [[ ! -z "${GCSFUSE_BUCKET}" ]]; then
 
    #Mount bucket to /var/lib/bareos/storage
-   gcsfuse --uid 101 --gid 101 -o allow_other --limit-bytes-per-sec "-1" --limit-ops-per-sec "-1" \
-    --stat-cache-ttl "1h" --type-cache-ttl "1h"  $GCSFUSE_BUCKET /var/lib/bareos/storage/
-   
+   gcsfuse --uid 101 --gid 101 -o allow_other,nonempty --limit-bytes-per-sec "-1" --limit-ops-per-sec "-1" \
+    --stat-cache-ttl "1h" --type-cache-ttl "1h" --nonempty  $GCSFUSE_BUCKET /var/lib/bareos/storage/
+
    #allow_other users
    sed -i 's/#user_allow_other/user_allow_other/' /etc/fuse.conf
 fi
 
+if [[ ! -z "${DEVICE}" ]]; then
+  mkdir /var/lib/bareos/${DEVICE}
+fi
 # Fix permissions
 find /etc/bareos/bareos-sd.d ! -user bareos -exec chown bareos {} \;
-chown -R bareos /var/lib/bareos 
+chown -R bareos /var/lib/bareos
 
 # Run Dockerfile CMD
 exec "$@"

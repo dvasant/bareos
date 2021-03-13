@@ -84,13 +84,23 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
   # MyCatalog Backup
   sed -i "s#/var/lib/bareos/bareos.sql#/var/lib/bareos-director/bareos.sql#" \
     /etc/bareos/bareos-dir.d/fileset/Catalog.conf
-  
+
   # Default config file
   cp /default.conf /etc/bareos/bareos-dir.d/job/default.conf
 
   # Control file
   touch /etc/bareos/bareos-config.control
 fi
+
+# if [[ ! -z "${GCSFUSE_BUCKET}" ]]; then
+
+#    #Mount bucket to /etc/bareos/
+#    gcsfuse --uid 101 --gid 101 -o allow_other,nonempty --limit-bytes-per-sec "-1" --limit-ops-per-sec "-1" \
+#     --stat-cache-ttl "1h" --type-cache-ttl "1h"  $GCSFUSE_BUCKET /etc/bareos/
+
+#    #allow_other users
+#    sed -i 's/#user_allow_other/user_allow_other/' /etc/fuse.conf
+# fi
 
 if [ ! -f /etc/bareos/bareos-db.control ]
   then
@@ -127,10 +137,15 @@ if [ ! -f /etc/bareos/bareos-db.control ]
     /usr/lib/bareos/scripts/update_bareos_tables
     /usr/lib/bareos/scripts/grant_bareos_privileges
 fi
-
+# send bareos logs to container logs
+  # touch /var/log/bareos/bareos.log && ln -sf /dev/stdout /var/log/bareos/bareos.log
+  # touch /var/log/bareos/bareos-audit.log && ln -sf /dev/stderr /var/log/bareos/bareos-audit.log
 # Fix permissions
 find /etc/bareos ! -user bareos -exec chown bareos {} \;
 chown -R bareos:bareos /var/lib/bareos
 
 # Run Dockerfile CMD
+# if [[ $FORCE_ROOT = true ]] ;then
+#   export BAREOS_DAEMON_USER='root'
+# fi
 exec "$@"
