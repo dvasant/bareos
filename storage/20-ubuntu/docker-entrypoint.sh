@@ -19,7 +19,7 @@ if [[ ! -z "${GCSFUSE_BUCKET}" ]]; then
 
    #Mount bucket to /var/lib/bareos/storage
    gcsfuse --uid 101 --gid 101 -o allow_other,nonempty --limit-bytes-per-sec "-1" --limit-ops-per-sec "-1" \
-    --stat-cache-ttl "1h" --type-cache-ttl "1h" --nonempty  $GCSFUSE_BUCKET /var/lib/bareos/storage/
+    --stat-cache-ttl "1h" --type-cache-ttl "1h"  $GCSFUSE_BUCKET /var/lib/bareos/storage/
 
    #allow_other users
    sed -i 's/#user_allow_other/user_allow_other/' /etc/fuse.conf
