@@ -27,18 +27,25 @@ if [ ! -f /etc/bareos/bareos-config.control ]; then
     /etc/bareos/bareos-dir.d/catalog/MyCatalog.conf
   sed -i 's#dbname = "bareos"#dbname = '\"${DB_NAME}\"'\n  dbaddress = '\"${DB_HOST}\"'\n  dbport = '\"${DB_PORT}\"'#' \
     /etc/bareos/bareos-dir.d/catalog/MyCatalog.conf
-  [ -n "${SENDER_MAIL}" ] && sed -i "s#<%r#<${SENDER_MAIL}#g" \
-    /etc/bareos/bareos-dir.d/messages/Daemon.conf
-  sed -i "s#/usr/bin/bsmtp -h localhost#/usr/bin/bsmtp -h ${SMTP_HOST}#" \
-    /etc/bareos/bareos-dir.d/messages/Daemon.conf
-  [ -n "${ADMIN_MAIL}" ] && sed -i "s#mail = root#mail = ${ADMIN_MAIL}#" \
-    /etc/bareos/bareos-dir.d/messages/Daemon.conf
-  [ -n "${SENDER_MAIL}" ] && sed -i "s#<%r#<${SENDER_MAIL}#g" \
-    /etc/bareos/bareos-dir.d/messages/Standard.conf
-  [ -n "${SMTP_HOST}" ] && sed -i "s#/usr/bin/bsmtp -h localhost#/usr/bin/bsmtp -h ${SMTP_HOST}#" \
-    /etc/bareos/bareos-dir.d/messages/Standard.conf
-  [ -n "${ADMIN_MAIL}" ] && sed -i "s#mail = root#mail = ${ADMIN_MAIL}#" \
-    /etc/bareos/bareos-dir.d/messages/Standard.conf
+
+  if [ -n "${SMTP_HOST}" ]
+    then
+      sed -i "s#/usr/bin/bsmtp -h localhost#/usr/bin/bsmtp -h ${SMTP_HOST}#" \
+        /etc/bareos/bareos-dir.d/messages/Daemon.conf
+      sed -i "s#/usr/bin/bsmtp -h localhost#/usr/bin/bsmtp -h ${SMTP_HOST}#" \
+        /etc/bareos/bareos-dir.d/messages/Standard.conf
+      sed -i "s#<%r#<${SENDER_MAIL}#g" \
+        /etc/bareos/bareos-dir.d/messages/Daemon.conf
+      sed -i "s#<%r#<${SENDER_MAIL}#g" \
+        /etc/bareos/bareos-dir.d/messages/Standard.conf
+      sed -i "s#mail = root#mail = ${ADMIN_MAIL}#" \
+        /etc/bareos/bareos-dir.d/messages/Daemon.conf
+      sed -i "s#mail = root#mail = ${ADMIN_MAIL}#" \
+        /etc/bareos/bareos-dir.d/messages/Standard.conf
+    else
+      sed -i '/mail/d' /etc/bareos/bareos-dir.d/messages/*
+      sed -i '/operator/d' /etc/bareos/bareos-dir.d/messages/*
+  fi
 
   # Setup webhook
   if [ "${WEBHOOK_NOTIFICATION}" = true ]; then
