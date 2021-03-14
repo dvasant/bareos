@@ -26,7 +26,7 @@ if [[ ! -z "${GCSFUSE_BUCKET}" ]]; then
 fi
 
 if [[ ! -z "${DEVICE}" ]]; then
-  mkdir /var/lib/bareos/${DEVICE}
+  mkdir /var/lib/bareos/storage/${DEVICE}
 fi
 # Fix permissions
 find /etc/bareos/bareos-sd.d ! -user bareos -exec chown bareos {} \;
