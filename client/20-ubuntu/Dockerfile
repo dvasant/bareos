@@ -46,6 +46,7 @@ RUN pip3 install --upgrade google-cloud-pubsub python-bareos sslpsk
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 COPY ax_bareos_cli_recovery.py /ax_bareos_cli_recovery.py
 COPY ax_bareos_cli_protection.py /ax_bareos_cli_protection.py
+COPY ax_sql_update.py  /ax_sql_update.py
 RUN chmod u+x /docker-entrypoint.sh
 
 RUN tar czf /bareos-fd.tgz /etc/bareos/bareos-fd.d

@@ -66,4 +66,6 @@ EXPOSE 9101
 VOLUME /etc/bareos /var/log/bareos
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["/usr/sbin/bareos-dir", "-u", "root", "-f", "-d 200"]
+CMD ["/usr/sbin/bareos-dir", "-u", "bareos", "-f"]
+
+# CMD ["/usr/sbin/bareos-dir", "-u", "root", "-f", "-d 200"]
