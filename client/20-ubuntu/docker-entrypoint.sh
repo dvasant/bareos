@@ -17,7 +17,7 @@ if [ ! -f /etc/bareos/bareos-fd-config.control ]; then
 
   sed -i 's#Maximum Concurrent Jobs =.*#Maximum Concurrent Jobs = 30\n  Heartbeat Interval = 60#' \
     /etc/bareos/bareos-fd.d/client/myself.conf
-
+  sed -i 's#-l -C -R -d#-t vmfs_flat -l -C -R -d#' /usr/lib/bareos/plugins/BareosFdPluginVMware.py
   # Control file
   touch /etc/bareos/bareos-fd-config.control
 fi
