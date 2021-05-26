@@ -11,6 +11,11 @@ if [ ! -f /etc/bareos/bareos-sd-config.control ]; then
   sed -i 's#Maximum Concurrent Jobs =.*#Maximum Concurrent Jobs = 30\n  Heartbeat Interval = 60#' \
     /etc/bareos/bareos-sd.d/storage/bareos-sd.conf
 
+  if [[ ! -z "${SD_PORT}" ]]; then
+    sed -i 's#}#  SD Port = '$SD_PORT'\n}#' \
+      /etc/bareos/bareos-sd.d/storage/bareos-sd.conf
+  fi
+
   # Control file
   touch /etc/bareos/bareos-sd-config.control
 fi
@@ -28,9 +33,14 @@ fi
 if [[ ! -z "${DEVICE}" ]]; then
   mkdir /var/lib/bareos/storage/${DEVICE}
 fi
+
 # Fix permissions
 find /etc/bareos/bareos-sd.d ! -user bareos -exec chown bareos {} \;
 chown -R bareos /var/lib/bareos
+
+if [[ $FORCE_ROOT = true ]] ;then
+  export BAREOS_DAEMON_USER='root'
+fi
 
 # Run Dockerfile CMD
 exec "$@"

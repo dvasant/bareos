@@ -15,6 +15,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-url="https://github.com/barcus/bareos" \
       org.label-schema.version=$VERSION
 
+ENV BAREOS_DAEMON_USER bareos
 ENV BAREOS_KEY http://download.bareos.org/bareos/release/20/xUbuntu_20.04/Release.key
 ENV BAREOS_REPO http://download.bareos.org/bareos/release/20/xUbuntu_20.04/
 ENV DEBIAN_FRONTEND noninteractive
@@ -51,4 +52,4 @@ VOLUME /etc/bareos
 VOLUME /var/lib/bareos/storage
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["/usr/sbin/bareos-sd", "-u", "bareos", "-f"]
+CMD ["sh", "-c", "/usr/sbin/bareos-sd -u $BAREOS_DAEMON_USER -f"]

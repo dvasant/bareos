@@ -6,6 +6,7 @@ import json
 import sys
 import logging
 import psycopg2
+import time
 
 # def read_env_vars_file(job_id):
 
@@ -79,6 +80,25 @@ def create_bareos_director_connection(director_password):
   logging.debug("Bareos director connected successfully")
   return director_console_connection
 
+def execute_query(cur, query):
+  cur.execute(query)
+  storage_names = cur.fetchall()
+  return storage_names
+
+def retry_with_backoff(cur, query, retries = 10, backoff_in_seconds = 1):
+  x = 0
+  while True:
+    storage_names = execute_query(cur, query)
+    if storage_names != []:
+      return storage_names
+    else:
+      if x >= retries:
+        return storage_names
+      else:
+        sleep = (backoff_in_seconds * 2 ** x )
+        time.sleep(sleep)
+        x += 1
+
 def execute_sql_queries(job_id):
   """[To execute sql query in bareos database]
 
@@ -89,9 +109,9 @@ def execute_sql_queries(job_id):
   print("Database connected successfully")
 
   cur = con.cursor()
-  cur.execute("SELECT name from public.storage where storageid in ( SELECT storageid FROM public.media WHERE mediaid IN (SELECT mediaid FROM public.jobmedia where jobid = {}))".format(job_id))
+  query = "SELECT name from public.storage where storageid in ( SELECT storageid FROM public.media WHERE mediaid IN (SELECT mediaid FROM public.jobmedia where jobid = {}))".format(job_id)
+  storage_names = retry_with_backoff(cur, query)
 
-  storage_names = cur.fetchall()
   if storage_names != []:
     for storage_name in storage_names:
         storagename = storage_name[0]
@@ -104,6 +124,8 @@ def execute_sql_queries(job_id):
     cur.execute("UPDATE public.media SET volstatus = 'Full', storageid={0} WHERE mediaid IN (SELECT mediaid FROM public.media WHERE mediaid IN (SELECT mediaid FROM public.jobmedia where jobid = {1}) );".format(storageid,job_id))
 
     print("Restore storage created successfully")
+  else:
+    raise ValueError("Failed: Empty storageNames returned")
 
   con.commit()
   con.close()
@@ -152,7 +174,7 @@ def prepare_job_json_data(action, job_id, director_console_connection):
 
   if action == "pre-action-job" and str(job_data['jobstatus']) == 'R':
     job_data['jobstatus'] = 'INPROGRESS'
-  if str(job_data['jobstatus']) == 'f' or ( action == "post-action-job" and ( sys.argv[8] == 'Fatal' or sys.argv[8] == 'Canceled' )):
+  if str(job_data['jobstatus']) == 'f' or ( action == "post-action-job" and ( sys.argv[8] == 'Fatal' or sys.argv[8] == 'Canceled' or sys.argv[8] == 'Error' )):
     job_data['jobstatus'] = 'FAILED'
   if action == "post-action-job" and ( str(job_data['jobstatus']) == 'R' or str(job_data['jobstatus']) == 'T' ) and sys.argv[8] == 'OK':
     job_data['jobstatus'] = 'COMPLETED'
@@ -206,7 +228,7 @@ def publish_job_json_to_pubsub(topic_path, job_data):
   logging.debug("Publishing data to this topic {}!!!!!!!!!!!!".format(topic_path.split("/")[-1]))
   try:
     topic = publisher.publish(topic_path, messages, eventName="INTENT_VMWARE_PROTECTION_JOB_STATUS_UPDATE")
-    logging.debug("Published messages to {}.".format(messages))
+    logging.debug("Published message id = {}. Published messages to {}.".format(topic.result(),messages))
   except Exception as e:
     logging.debug("Pubsub publish issue: {}".format(e))
     raise
@@ -245,7 +267,8 @@ if __name__ == '__main__':
   director_console_connection = create_bareos_director_connection(director_password)
 
   logging.debug("Updating the storageid for the completed job")
-  execute_sql_queries(job_id)
+  if action == "post-action-job" and sys.argv[8] == 'OK':
+    execute_sql_queries(job_id)
   if action != "pre-action-job" and action != "post-action-job":
     logging.debug("Reloading the bareos director configuration")
     result_json = execute_bareos_director_commands(director_console_connection, action)
