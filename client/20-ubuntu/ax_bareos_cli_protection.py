@@ -121,7 +121,8 @@ def execute_sql_queries(job_id):
 
     for id in id_list:
         storageid = id[0]
-    time.sleep(30)
+
+    time.sleep(180)
     cur.execute("UPDATE public.media SET volstatus = 'Full', storageid={0} WHERE mediaid IN (SELECT mediaid FROM public.media WHERE mediaid IN (SELECT mediaid FROM public.jobmedia where jobid = {1}) );".format(storageid,job_id))
 
     print("Restore storage created successfully")

@@ -147,6 +147,11 @@ fi
 # send bareos logs to container logs
   # touch /var/log/bareos/bareos.log && ln -sf /dev/stdout /var/log/bareos/bareos.log
   # touch /var/log/bareos/bareos-audit.log && ln -sf /dev/stderr /var/log/bareos/bareos-audit.log
+
+mkdir -p /etc/bareos/python-scripts/
+cp /ax_sql_storage_update.py /etc/bareos/python-scripts/ax_sql_storage_update.py
+chmod +x /etc/bareos/python-scripts/ax_sql_storage_update.py
+
 # Fix permissions
 find /etc/bareos ! -user bareos -exec chown bareos {} \;
 chown -R bareos:bareos /var/lib/bareos

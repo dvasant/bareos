@@ -32,7 +32,7 @@ cp /ax_bareos_cli_protection.py /etc/bareos/python-scripts/ax_bareos_cli_protect
 cp /ax_bareos_cli_recovery.py /etc/bareos/python-scripts/ax_bareos_cli_recovery.py
 cp /ax_sql_update.py /etc/bareos/python-scripts/ax_sql_update.py
 
-chmod +x /etc/bareos/python-scripts/ax_bareos_cli_protection.py /etc/bareos/python-scripts/ax_bareos_cli_recovery.py /etc/bareos/python-scripts/ax_bareos_cli_recovery.py
+chmod +x /etc/bareos/python-scripts/*
 
 # Fix permissions
 find /etc/bareos/bareos-fd.d ! -user bareos -exec chown bareos {} \;

@@ -56,6 +56,7 @@ COPY webhook-notify /usr/local/bin/webhook-notify
 COPY admin.conf.example /admin.conf
 COPY webui-admin.conf.example /webui-admin.conf
 COPY default.conf.example /default.conf
+COPY ax_sql_storage_update.py  /ax_sql_storage_update.py
 RUN chmod u+x /usr/local/bin/webhook-notify
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
